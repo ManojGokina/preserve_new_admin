@@ -1,6 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MoreVertical, Pencil, Trash2, Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Filter, UserPlus, Mail, Phone, MapPin, Calendar, Shield, Check, X, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../store/store';
+import { fetchUsers } from '../../store/userSlice';
 
 // Sample data - in a real app, this would come from an API
 const initialUsers = [
@@ -94,6 +97,14 @@ function Users() {
   const [showUserDetails, setShowUserDetails] = useState<number | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const itemsPerPage = 5;
+  const dispatch = useDispatch<AppDispatch>();
+  const { users, loading, error } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  console.log(users)
 
   const filterOptions: FilterOptions = {
     role: ['Admin', 'User', 'Editor'],
